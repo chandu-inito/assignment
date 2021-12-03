@@ -1,7 +1,14 @@
+
+
 command = ARGV[0]
 
-until system command do
-  system 'echo "Program crashed..Restarting"'
-  system 'sleep 1'
+spawn(command)
+Process.wait
+puts $?.exitstatus
+
+while $?.exitstatus do
+  sleep 1
+  spawn(command)
+  Process.wait
 end
 
