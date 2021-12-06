@@ -2,13 +2,11 @@
 
 command = ARGV[0]
 
-spawn(command)
+Process.spawn(command)
 Process.wait
-puts $?.exitstatus
 
-while $?.exitstatus do
+while $?.exitstatus != 0 do
   sleep 1
   spawn(command)
   Process.wait
 end
-
