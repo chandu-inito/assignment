@@ -2,19 +2,15 @@ require 'securerandom'
 
 class Helper
   
-  attr_accessor :keys, :available_keys, :blocked_keys
+  attr_reader :keys, :available_keys, :blocked_keys
 
   def initialize
+    # @keys = Hash.new([0, false, 0])
     @keys = {}
     @available_keys = []
     @blocked_keys = {}
 
-    Thread.new do
-      while true do
-        sleep 0.1
-        reset
-      end
-    end
+    self.run_reset
   end
 
   def generate_key 
@@ -67,6 +63,8 @@ class Helper
     result
   end
 
+  private
+
   def reset
     current_time = Time.now
     @keys.each do |key, time|
@@ -79,6 +77,15 @@ class Helper
       if time < current_time
         @blocked_keys.delete(key)
         @available_keys.push(key)
+      end
+    end
+  end
+
+  def run_reset
+    Thread.new do
+      while true do
+        sleep 0.1
+        self.reset
       end
     end
   end
